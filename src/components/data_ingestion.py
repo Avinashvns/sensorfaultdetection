@@ -42,7 +42,7 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e,sys)
     
-    def export_data_into_feature_store_file_path(self) -> pd.DataFame:
+    def export_data_into_feature_store_file_path(self) -> pd.DataFrame:
 
         try:
             logging.info(f"Exporting data from mongodb")

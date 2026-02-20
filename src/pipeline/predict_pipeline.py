@@ -65,7 +65,7 @@ class PredictionPipeline:
             target_column_mapping = {0: 'bad' , 1: 'good'}       
 
             input_dataframe[prediction_column_name] = input_dataframe[prediction_column_name].map(target_column_mapping) 
-            os.makedirs(self.prediction_pipeline_config.prediction_output_dirnamere, exist_ok=True)
+            os.makedirs(self.prediction_pipeline_config.prediction_output_dirname, exist_ok=True)
             input_dataframe.to_csv(self.prediction_pipeline_config.prediction_file_path, index=False)
             logging.info("Predictions completed")
 
