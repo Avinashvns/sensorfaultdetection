@@ -226,7 +226,8 @@ class ModelTrainer:
         print("Best params:", best_params)
 
         finetuned_model = best_model_object.set_params(**best_params)
-        return finetuned_model
+        # return finetuned_model
+        return finetuned_model, best_params
 
     def initiate_model_trainer(self, train_array, test_array):
 
@@ -247,7 +248,13 @@ class ModelTrainer:
 
         best_model = self.models[best_model_name]
 
-        best_model = self.finetune_best_model(
+        # best_model = self.finetune_best_model(
+        #     best_model_object=best_model,
+        #     best_model_name=best_model_name,
+        #     x_train=x_train,
+        #     y_train=y_train
+        # )
+        best_model, best_params = self.finetune_best_model(
             best_model_object=best_model,
             best_model_name=best_model_name,
             x_train=x_train,
@@ -274,4 +281,10 @@ class ModelTrainer:
             obj=best_model
         )
 
-        return self.model_trainer_config.trained_model_path
+        # return self.model_trainer_config.trained_model_path
+        # 🔥 RETURN THIS (IMPORTANT)
+        return {
+            "best_model": best_model_name,
+            "best_params": best_params,
+            "accuracy": round(final_score, 3)
+        }

@@ -12,24 +12,42 @@ app = Flask(__name__)
 
 
 @app.route("/")
+# def home():
+#     return "Welcome to my application"
+
 def home():
-    return "Welcome to my application"
+    return render_template("index.html")
 
 
 
+@app.route("/train")
+# def train_route():
+#     try:
+#         train_pipeline = TrainingPipeline()
+#         train_pipeline.run_pipeline()
+
+
+#         return "Training Completed."
+
+
+#     except Exception as e:
+#         raise CustomException(e,sys)
 
 @app.route("/train")
 def train_route():
     try:
         train_pipeline = TrainingPipeline()
-        train_pipeline.run_pipeline()
+        
+        result = train_pipeline.run_pipeline()
 
-
-        return "Training Completed."
-
+        return render_template(
+            "train_result.html",
+            params=result.get("best_params"),
+            accuracy=result.get("accuracy")
+        )
 
     except Exception as e:
-        raise CustomException(e,sys)
+        raise CustomException(e, sys)
 
 
 @app.route('/predict', methods=['POST', 'GET'])

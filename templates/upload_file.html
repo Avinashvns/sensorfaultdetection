@@ -1,47 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Wafer fault detection</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-<link rel="stylesheet" href="../static/css/style.css">
+    <title>Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+    
 </head>
-<body>
-   
-<!-- partial:index.partial.html -->
-<form action = "/predict" method = "post" enctype="multipart/form-data" >
-    <h1 class="title">Upload CSV for the prediction</h1>
-<div class="frame">
-    <div class="center">
-        <div class="title">
-            <h1>Drop file to upload</h1>
-        </div>
-       
 
+<body>
+
+<!-- 🔥 Navbar -->
+<div class="navbar">
+    <div class="logo">⚡ Sensor ML</div>
+    <a href="/">
+        <button class="nav-btn">🏠 Home</button>
+    </a>
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>🔍 Fault Prediction</h1>
+
+        <p>Upload CSV file to detect faults using trained ML model</p>
+
+        <form action="/predict" method="post" enctype="multipart/form-data">
 
             <div class="dropzone">
-                <img src="http://100dayscss.com/codepen/upload.svg" class="upload-icon" />
-                <input type="file" class="upload-input" name = "file" accept=".csv" >
+                <div class="upload-text">📂 Click or Drop CSV file</div>
+                <input type="file" id="fileInput" class="upload-input" name="file" accept=".csv" required>
+                <div id="fileName" class="file-name"></div>
             </div>
 
+            <button type="submit" id="uploadBtn" class="btn btn-upload" disabled>
+                Run Prediction
+            </button>
 
-        <button type="submit" class="btn" name="uploadbutton">Upload file</button>
-       
+        </form>
+
     </div>
-
 
 </div>
 
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const fileName = document.getElementById("fileName");
+    const uploadBtn = document.getElementById("uploadBtn");
 
-</form>
-<!-- original pen: https://codepen.io/roydigerhund/pen/ZQdbeN  -->
+    uploadBtn.disabled = true; // default disabled
 
-
-<!-- NO JS ADDED YET -->
-<!-- partial -->
-  <script src='https://100dayscss.com/codepen/js/jquery.min.js'></script><script  src="./script.js"></script>
-
+    fileInput.addEventListener("change", function () {
+        if (this.files.length > 0) {
+            fileName.innerText = "📄 " + this.files[0].name;
+            uploadBtn.disabled = false;
+        } else {
+            fileName.innerText = "";
+            uploadBtn.disabled = true;
+        }
+    });
+</script>
 
 </body>
 </html>

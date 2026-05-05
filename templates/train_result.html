@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Training Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: "Poppins", sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .model {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .accuracy {
+            font-size: 40px;
+            font-weight: bold;
+            color: #00ffcc;
+            margin: 20px 0;
+        }
+
+        .accuracy span {
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        table th {
+            background: #00c6ff;
+            color: black;
+            padding: 12px;
+        }
+
+        table td {
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        table tr:nth-child(even) td {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .btn-group {
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 30px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-home {
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            color: white;
+        }
+
+        .btn-home:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-predict {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white;
+        }
+
+        .btn-predict:hover {
+            transform: scale(1.05);
+        }
+
+        .tag {
+            display: inline-block;
+            background: #00ffcc20;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="tag">Machine Learning Pipeline</div>
+
+    <h1>🚀 Model Training Complete</h1>
+
+    <div class="model">
+        Best Model: <b>{{ model }}</b>
+    </div>
+
+    <div class="accuracy">
+        {{ accuracy }} <span>Accuracy Score</span>
+    </div>
+
+    <h3>🔧 Best Hyperparameters</h3>
+
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+        </tr>
+
+        {% for key, value in params.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="btn-group">
+        <a href="/"><button class="btn btn-home">🏠 Home</button></a>
+        <a href="/predict"><button class="btn btn-predict">🔍 Predict</button></a>
+    </div>
+
+</div>
+
+</body>
+</html>

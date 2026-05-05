@@ -41,37 +41,87 @@ class PredictionPipeline:
         except Exception as e:
             raise CustomException(e,sys)
     
-    def predict(self,features):
+    # def predict(self,features):
+    #     try:
+    #         model= self.utils.load_object(self.prediction_pipeline_config.model_file_path)
+    #         preprocessor = self.utils.load_object(file_path=self.prediction_pipeline_config.preprocessor_path)
+
+    #         transformed_x=preprocessor.transform(features)
+    #         preds = model.predict(transformed_x)
+    #         return preds
+    #     except Exception as e:
+    #         raise CustomException(e,sys)
+        
+    # def get_predicted_dataframe(self,input_dataframe_path : pd.DataFrame):
+    #     try:
+    #         prediction_column_name: str = TARGET_COLUMN
+    #         input_dataframe: pd.DataFrame = pd.read_csv(input_dataframe_path)
+
+    #         input_dataframe= input_dataframe.drop(columns="Unnamed: 0") if "Unnamed: 0" in input_dataframe.columns else input_dataframe
+
+    #         predictions = self.predict(input_dataframe)
+    #         input_dataframe[prediction_column_name] = [pred for pred in predictions]
+
+    #         target_column_mapping = {0: 'bad' , 1: 'good'}       
+
+    #         input_dataframe[prediction_column_name] = input_dataframe[prediction_column_name].map(target_column_mapping) 
+    #         os.makedirs(self.prediction_pipeline_config.prediction_output_dirname, exist_ok=True)
+    #         input_dataframe.to_csv(self.prediction_pipeline_config.prediction_file_path, index=False)
+    #         logging.info("Predictions completed")
+
+    #     except Exception as e:
+    #         raise CustomException(e,sys)
+    def predict(self, features):
         try:
-            model= self.utils.load_object(self.prediction_pipeline_config.model_file_path)
+            # 🔥 CLEAN ALL POSSIBLE TARGET VARIANTS
+            features.columns = features.columns.str.strip()
+
+            # remove any target-like column
+            for col in ["Good/Bad", "good/bad", "target"]:
+                if col in features.columns:
+                    features = features.drop(columns=[col])
+
+            print("FINAL FEATURES:", features.columns)  # debug
+
+            model = self.utils.load_object(self.prediction_pipeline_config.model_file_path)
             preprocessor = self.utils.load_object(file_path=self.prediction_pipeline_config.preprocessor_path)
 
-            transformed_x=preprocessor.transform(features)
+            transformed_x = preprocessor.transform(features)
             preds = model.predict(transformed_x)
+
             return preds
+
         except Exception as e:
-            raise CustomException(e,sys)
-        
-    def get_predicted_dataframe(self,input_dataframe_path : pd.DataFrame):
+            raise CustomException(e, sys)
+    
+    def get_predicted_dataframe(self, input_dataframe_path: pd.DataFrame):
         try:
             prediction_column_name: str = TARGET_COLUMN
             input_dataframe: pd.DataFrame = pd.read_csv(input_dataframe_path)
 
-            input_dataframe= input_dataframe.drop(columns="Unnamed: 0") if "Unnamed: 0" in input_dataframe.columns else input_dataframe
+            # remove unwanted column
+            input_dataframe = input_dataframe.drop(columns="Unnamed: 0") if "Unnamed: 0" in input_dataframe.columns else input_dataframe
 
-            predictions = self.predict(input_dataframe)
+            # 🔥 FIX: drop target column before prediction
+            features = input_dataframe.drop(columns=[TARGET_COLUMN], errors='ignore')
+
+            predictions = self.predict(features)
+
             input_dataframe[prediction_column_name] = [pred for pred in predictions]
 
-            target_column_mapping = {0: 'bad' , 1: 'good'}       
+            target_column_mapping = {0: 'bad', 1: 'good'}       
 
-            input_dataframe[prediction_column_name] = input_dataframe[prediction_column_name].map(target_column_mapping) 
+            input_dataframe[prediction_column_name] = input_dataframe[prediction_column_name].map(target_column_mapping)
+
             os.makedirs(self.prediction_pipeline_config.prediction_output_dirname, exist_ok=True)
+
             input_dataframe.to_csv(self.prediction_pipeline_config.prediction_file_path, index=False)
+
             logging.info("Predictions completed")
 
         except Exception as e:
-            raise CustomException(e,sys)
-        
+            raise CustomException(e, sys)
+            
     
     def run_pipeline(self):
         try:
